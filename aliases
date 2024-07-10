@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# demande confirmation (commande sensible)
+alias cp='cp -i'
+alias rm='rm -i'
+alias ln='ln -i'
+alias mv='mv -i'
+
+# ls
+alias l='ls -v'         # Triés
+alias lx='ls -lXB'      # Triés par extension.
+alias lk='ls -lSr'      # Triés par taille, plus petit vers grand.
+alias lt='ls -ltr'      # Triés par date
+alias lc='ls -ltcr'     # Triés par dernière modification de statut (inode).
+alias lu='ls -ltur'     # Triés par date d'accès, les plus récents en dernier.
+alias ll='l -l'         # Lister
+alias lm='ll | more'    # Paginer
+alias lr='ll -R'        # Recursif
+alias la='l -A'         # Cachés sauf . et ..
+alias lla='la -l'       # Liste cachés sauf . et ..
+
+# divers
+alias ..='cd ..'
+alias ...='cd ~'
+alias home='cd ~'
+alias root='cd /'
+alias mkdir='mkdir -p'
+alias debug='set -x'
+alias undebug='set +x'
+alias :q='exit'
+alias more='less'
+alias clr='clear'
+
+# L'éditeur
+alias e="$EDITOR"
+alias ed='e'
+alias edit='e'
+alias nano='e'          # Je n'aime pas nano
+alias vi='e'
+if [ "$EDITOR" = "vim" ]; then
+    alias vimrc='e ~/.vimrc'
+elif [ "$EDITOR" = "nvim" ]; then
+    alias vimrc='e ~/.config/init.vim'
+fi
+
+alias aliases='e ~/.aliases'
+alias profile='e ~/.profile'
+
+# Todo
+alias todo='cat ~/.todo'
+
