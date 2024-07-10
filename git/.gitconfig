@@ -1,0 +1,16 @@
+[user]
+    name = dot-richard
+    email = dot-richard@users.noreply.github.com
+
+[init]
+    defaultBranch = main
+
+[color]
+    ui = auto
+
+[alias]
+    st = status
+    ch = checkout
+    co = commit
+    br = branch
+    hist = log --oneline --graph --decorate --all
