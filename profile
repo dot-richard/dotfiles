@@ -4,7 +4,7 @@
 export LANG="fr_FR.utf8"
 export EDITOR="vim"
 export VISUAL="$EDITOR"
-export BROWSER="firerox"
+export BROWSER="firefox"
 export PATH="$HOME/bin:$PATH"
 
 # Permissions restrictives :
