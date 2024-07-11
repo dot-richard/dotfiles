@@ -11,8 +11,10 @@ function hello {
 #   Crochet lorsqu'une commande est non trouvées.
 #
 function command_not_found_handle {
-    echo "Commande non trouvées: '$@'."
-    return 127
+    # Désactiver la sensibilité a la casse.
+    command=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    shift
+    "$command" "$@"
 }
 
 ##
