@@ -1,0 +1,26 @@
+# ~/.bashrc
+
+# Si le shell n'est pas exécuté de manière interactive, ne fais rien.
+[[ $- != *i* ]] && return
+
+# Inclure Bash completion
+if [ -f /etc/bash_completion ]; then
+    source /etc/bash_completion
+fi
+
+# Inclure les alias génénaux
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
+fi
+
+# Le répertoire pour bash interractif.
+BASH_CONFIG_DIR=~/.bashrc.d
+
+# Inclure les fichiers du répertoire pour bashrc.
+if [ -d "$BASH_CONFIG_DIR" ]; then
+    for file in "$BASH_CONFIG_DIR"/*.sh; do
+        [ -f "$file" ] && [ -r "$file" ] && source "$file"
+    done
+    unset file
+fi
+
