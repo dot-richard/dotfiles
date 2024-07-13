@@ -49,3 +49,5 @@ alias profile='e ~/.profile'
 # Todo
 alias todo='cat ~/.todo'
 
+# Dotfiles
+alias dotfiles='cd ~/.dotfiles'
