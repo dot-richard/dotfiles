@@ -51,3 +51,9 @@ alias todo='cat ~/.todo'
 
 # Dotfiles
 alias dotfiles='cd ~/.dotfiles'
+
+# Rackup config.ru
+alias ru='rackup config.ru'
+
+# edit Gemfile
+alias gemfile='e Gemfile'
