@@ -7,56 +7,42 @@
 " {{{ Plugins
 
 call plug#begin('~/.config/vim/plugged')
-
-" Fonctionnalités
+" Plug 'dot-richard/minimaldark256' " MY colorscheme
 Plug 'itchyny/lightline.vim'        " Nouvelle barre de status
 Plug 'mhinz/vim-startify'           " Nouveau écran d'acceuil
 Plug 'ryanoasis/vim-devicons'       " Ajouter des icones
 Plug 'scrooloose/nerdtree'          " Voir arborescence projet
-Plug 'scrooloose/nerdcommenter'     " Dé/Commenter rapidement
 Plug 'brooth/far.vim'               " Recherche
 Plug 'tpope/vim-fugitive'           " Git support
-
-" Syntaxe et langages
-" Plug 'w0rp/ale'                     " Syntaxe checker
+Plug 'tpope/vim-dispatch'
 Plug 'honza/vim-snippets'
 Plug 'sheerun/vim-polyglot'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'tpope/vim-rake'
-"Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-surround'
 "Plug 'jiangmiao/auto-pairs'
-
-" Games
-Plug 'johngrib/vim-game-code-break'
-
-" Theme de couleurs
-Plug 'dot-richard/minimaldark256'
-
 call plug#end()
 " }}}
 
-" {{{ Configuration
 
 let mapleader =  ','
 colorscheme minimaldark256
+runtime! ~/.vim/vimrc.d/*.vim
 
-for file in globpath('~/.vim/config', '*.vim', 0, 1)
-    execute 'source' file
-endfor
+" {{{ Interface
 
-" interface general
 set ruler
 set number
 set relativenumber
 set cc=80
-set guicursor=a:blink
 set cursorline
 set cursorcolumn
 set signcolumn=auto
 set foldmethod=marker
 set foldcolumn=1
 set noshowmatch
-"let g:loaded_matchparen = 1     " desactiver les parenthèses
+let g:loaded_matchparen = 1     " desactiver les parenthèses
 
 " status bar
 set laststatus=2
@@ -69,7 +55,7 @@ set clipboard=unnamedplus
 set mouse=
 
 " Indentation
-set autoindent
+"set autoindent
 set expandtab
 set shiftwidth=4
 set softtabstop=4
@@ -94,33 +80,56 @@ set list
 set listchars=tab:>-,trail:~,extends:>,precedes:<,nbsp:_
 set fillchars=eob:~,fold:-,foldopen:+,foldclose:-
 
-" Fichiers et buffers
+" }}}
+
+" {{{ Fichiers et buffers
 
 set hidden
 set undofile
 set backup
 set swapfile
 
-" repertoire pour swap
+" Répertoire pour les fichiers de swap
 if &swapfile
-    let g:swap_dir='~/.vim/swaps'
-    execute 'silent !mkdir -p' g:swap_dir . ' > /dev/null 2>&1'
-    execute 'set directory^=' . g:swap_dir . '//'
+    let g:swap_dir = $HOME . '/.vim/swaps'
+    call mkdir(g:swap_dir, 'p')
+    execute 'set directory^=' . g:swap_dir
 endif
+
+" Répertoire pour les sauvegardes
+if &backup
+    let g:back_dir = $HOME . '/.vim/backups'
+    call mkdir(g:back_dir, 'p')
+    execute 'set backupdir^=' . g:back_dir
+endif
+
+" Répertoire pour les fichiers d'undo
+if &undofile
+    let g:undo_dir = $HOME . '/.vim/undos'
+    call mkdir(g:undo_dir, 'p')
+    execute 'set undodir^=' . g:undo_dir
+endif
+
+" repertoire pour swap
+"if &swapfile
+"    let g:swap_dir='~/.vim/swaps'
+"    execute 'silent !mkdir -p' g:swap_dir . ' > /dev/null 2>&1'
+"    execute 'set directory^=' . g:swap_dir . '//'
+"endif
 
 " repertoire pour backups
-if &backup
-    let g:back_dir='~/.vim/backups'
-    execute 'silent !mkdir -p' g:back_dir . ' > /dev/null 2>&1'
-    execute 'set backupdir^=' . g:back_dir . '//'
-endif
+"if &backup
+"    let g:back_dir='~/.vim/backups'
+"    execute 'silent !mkdir -p' g:back_dir . ' > /dev/null 2>&1'
+"    execute 'set backupdir^=' . g:back_dir . '//'
+"endif
 
 " repertoire pour undos (historique d'annulation)
-if &undofile
-    let g:undo_dir='~/.vim/undos'
-    execute 'silent !mkdir -p' g:undo_dir . ' > /dev/null 2>&1'
-    execute 'set undodir^=' . g:undo_dir . '//'
-endif
+"if &undofile
+"    let g:undo_dir='~/.vim/undos'
+"    execute 'silent !mkdir -p' g:undo_dir . ' > /dev/null 2>&1'
+"    execute 'set undodir^=' . g:undo_dir . '//'
+"endif
 
 " }}}
 
