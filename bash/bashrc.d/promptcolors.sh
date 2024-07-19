@@ -34,5 +34,5 @@ ON_WHITE='\[\e[47m\]'
 NC='\[\e[m\]'
 
 # Construire le prompt avec les couleurs
-PS1="${RED}\u${NC}@${RED}\h${NC}:${BWHITE}\w${NC} \$ "
+PS1="${WHITE}\$ ${BRED}\u${BLACK}@${BRED}\h${WHITE} ${BWHITE}\w${NC} "
 
