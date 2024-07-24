@@ -43,17 +43,12 @@ elif [ "$EDITOR" = "nvim" ]; then
     alias vimrc='e ~/.config/init.vim'
 fi
 
+# de quoi me faciliter la vie
 alias aliases='e ~/.aliases'
 alias profile='e ~/.profile'
-
-# Todo
 alias todo='cat ~/.todo'
-
-# Dotfiles
 alias dotfiles='cd ~/.dotfiles'
-
-# Rackup config.ru
 alias ru='rackup config.ru'
-
-# edit Gemfile
 alias gemfile='e Gemfile'
+alias jks='bundle exec jekyll serve'
+
