@@ -1,41 +1,64 @@
-" ~/.vimrc
+" ..................................................
+" ..................................................
 
-" inclure la configuration par defaut.
+" ..  ##    ##  ##  ##      ##   ####      ####   ..
+" ..  ##    ##  ##  ###    ###  ######    ######  ..
+" ..  ##    ##      ####  ####  ##   ##  ##       ..
+" ..  ###  ###  ##  ## #### ##  ######   ##       ..
+" ..   ######   ##  ##  ##  ##  ##   ##   ######  ..
+" ..     ##     ##  ##      ##  ##   ##    ####   ..
+
+" ..................................................
+" ..................................................
+
+" {{{ include la configuration par default
+
 "unlet! skip_defaults_vim
 "source $VIMRUNTIME/defaults.vim
+
+" }}}
 
 " {{{ Plugins
 
 call plug#begin('~/.config/vim/plugged')
-" Plug 'dot-richard/minimaldark256' " MY colorscheme
+"Plug 'dot-richard/minimaldark256'   " MY colorscheme
 Plug 'itchyny/lightline.vim'        " Nouvelle barre de status
 Plug 'mhinz/vim-startify'           " Nouveau écran d'acceuil
 Plug 'ryanoasis/vim-devicons'       " Ajouter des icones
 Plug 'scrooloose/nerdtree'          " Voir arborescence projet
-Plug 'brooth/far.vim'               " Recherche
-Plug 'tpope/vim-fugitive'           " Git support
+"Plug 'brooth/far.vim'               " Recherche
 Plug 'tpope/vim-dispatch'
-Plug 'honza/vim-snippets'
-Plug 'sheerun/vim-polyglot'
-Plug 'ecomba/vim-ruby-refactoring'
-Plug 'tpope/vim-rake'
-Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-endwise'            " fermeture des blocs
 Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-rake'
+"Plug 'honza/vim-snippets'
+"Plug 'sheerun/vim-polyglot'
+"Plug 'ecomba/vim-ruby-refactoring'
 "Plug 'jiangmiao/auto-pairs'
 call plug#end()
+
 " }}}
 
+" {{{ Map Leader
 
 let mapleader =  ','
+
+" }}}
+
+" {{{ colorscheme
+
 colorscheme minimaldark256
-runtime! ~/.vim/vimrc.d/*.vim
+
+"}}}
 
 " {{{ Interface
 
+set encoding=utf-8
+set fileencoding=utf-8
 set ruler
 set number
 set relativenumber
-set cc=80
+set cc=100
 set cursorline
 set cursorcolumn
 set signcolumn=auto
@@ -43,46 +66,63 @@ set foldmethod=marker
 set foldcolumn=1
 set noshowmatch
 let g:loaded_matchparen = 1     " desactiver les parenthèses
-
-" status bar
-set laststatus=2
-set showcmd
-set showmode
-
-" support
 set ttyfast
 set clipboard=unnamedplus
-set mouse=
-
-" Indentation
-"set autoindent
-set expandtab
-set shiftwidth=4
-set softtabstop=4
-set smartindent
-
-" Recherches
+set mouse=v
+set list
+set listchars=tab:>-,trail:~,extends:>,precedes:<,nbsp:_
+set fillchars=eob:~,fold:-,foldopen:+,foldclose:-
 set showmatch
 set hlsearch
 set incsearch
 set ignorecase
 set smartcase
 
-" Completions
+" }}}
+
+" {{{ status bar
+
+set laststatus=2
+set showcmd
+set showmode
+
+" lightline
+let g:lightline = {
+\   'active': {
+\       'left': [
+\           [ 'mode', 'paste' ],
+\           [ 'readonly', 'filename', 'modified' ]
+\       ]
+\   },
+\
+\   'component_function': {
+\       'filename': 'LightlineFilename',
+\       'gitbranch': 'FugitiveHead'
+\   }
+\ }
+" }}}
+
+" {{{ indentation
+
+set autoindent
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+set smartindent
+
+" }}}
+
+" {{{ completions
+
 filetype plugin indent on
 set omnifunc=syntaxcomplete#Complete
 set wildmenu
 set wildmode=list:full,full
-set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
-
-" Caractères invisibles
-set list
-set listchars=tab:>-,trail:~,extends:>,precedes:<,nbsp:_
-set fillchars=eob:~,fold:-,foldopen:+,foldclose:-
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xls
 
 " }}}
 
-" {{{ Fichiers et buffers
+" {{{ fichiers
 
 set hidden
 set undofile
@@ -110,43 +150,24 @@ if &undofile
     execute 'set undodir^=' . g:undo_dir
 endif
 
-" repertoire pour swap
-"if &swapfile
-"    let g:swap_dir='~/.vim/swaps'
-"    execute 'silent !mkdir -p' g:swap_dir . ' > /dev/null 2>&1'
-"    execute 'set directory^=' . g:swap_dir . '//'
-"endif
-
-" repertoire pour backups
-"if &backup
-"    let g:back_dir='~/.vim/backups'
-"    execute 'silent !mkdir -p' g:back_dir . ' > /dev/null 2>&1'
-"    execute 'set backupdir^=' . g:back_dir . '//'
-"endif
-
-" repertoire pour undos (historique d'annulation)
-"if &undofile
-"    let g:undo_dir='~/.vim/undos'
-"    execute 'silent !mkdir -p' g:undo_dir . ' > /dev/null 2>&1'
-"    execute 'set undodir^=' . g:undo_dir . '//'
-"endif
-
 " }}}
 
-" {{{ Mapping
+" {{{ arreter la surbrillance en mode recherche
 
-" Arreter la surbrillance des recherches :
 nnoremap <silent> <leader>n :nohlsearch<CR>
 
 " }}}
 
-" {{{ Autocmd
+" {{{ Remove trails space
 
 " Auto efface les queues d'espaces avant sauvegarde :
-autocmd BufWritePre * %s/\s\+$//e
+"autocmd BufWritePre * %s/\s\+$//e " probleme avec les diacritiques
+autocmd BufWritePre * %s/ \+$//e
 
-" Se souvenir de la dernière position du curseur
-" Après fermeture et ré ouverture d'un fichier.
+" }}}
+
+" {{{ se souvenir de la dernière position du curseur
+
 " from default.vim
 augroup remember_cursor_position
     autocmd!
@@ -157,5 +178,29 @@ augroup remember_cursor_position
     \ |   execute "normal! g`\""
     \ | endif
 augroup END
+
+" }}}
+
+" {{{ html indentation
+
+autocmd FileType html setlocal shiftwidth=2
+autocmd FileType html setlocal tabstop=2
+autocmd FileType html setlocal softtabstop=2
+
+" }}}
+
+" {{{ NERDTree
+
+map <C-n> :NERDTreeToggle<CR>
+command NT NERDTree
+let g:NERDTreeShowHidden=1
+let NERDTreeIgnore=['\~$']
+
+" }}}
+
+" {{{ dispatch
+
+command! Ruby :Dispatch ruby %
+command! Irb :Dispatch irb %
 
 " }}}
