@@ -37,11 +37,9 @@ alias ed='e'
 alias edit='e'
 alias nano='e'          # Je n'aime pas nano
 alias vi='e'
-if [ "$EDITOR" = "vim" ]; then
-    alias vimrc='e ~/.vimrc'
-elif [ "$EDITOR" = "nvim" ]; then
+alias vimrc='e ~/.vimrc'
+if [ "$EDITOR" = "nvim" ]; then
     alias vim='nvim'
-    alias vimrc='e ~/.config/init.vim'
 fi
 
 # de quoi me faciliter la vie
