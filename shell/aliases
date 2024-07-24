@@ -40,6 +40,7 @@ alias vi='e'
 if [ "$EDITOR" = "vim" ]; then
     alias vimrc='e ~/.vimrc'
 elif [ "$EDITOR" = "nvim" ]; then
+    alias vim='nvim'
     alias vimrc='e ~/.config/init.vim'
 fi
 
