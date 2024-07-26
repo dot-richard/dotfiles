@@ -11,6 +11,18 @@
 " ..................................................
 " ..................................................
 
+" Définir l'environnement, development par default
+
+if !empty($ENVIRONMENT)
+  let g:environment = $ENVIRONMENT
+else
+  let g:environment = "development"
+endif
+
+function! s:is_development()
+  return get(g:, 'environment', '') == 'development'
+endfunction
+
 " {{{ include la configuration par default
 
 "unlet! skip_defaults_vim
@@ -68,7 +80,7 @@ set noshowmatch
 let g:loaded_matchparen = 1     " desactiver les parenthèses
 set ttyfast
 set clipboard=unnamedplus
-set mouse=v
+" set mouse=a
 set list
 set listchars=tab:>-,trail:~,extends:>,precedes:<,nbsp:_
 set fillchars=eob:~,fold:-,foldopen:+,foldclose:-
@@ -122,32 +134,41 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xls
 
 " }}}
 
-" {{{ fichiers
+" {{{ fichiers temporaires
 
-set hidden
-set undofile
-set backup
-set swapfile
+if s:is_development()
 
-" Répertoire pour les fichiers de swap
-if &swapfile
-    let g:swap_dir = $HOME . '/.vim/swaps'
-    call mkdir(g:swap_dir, 'p')
-    execute 'set directory^=' . g:swap_dir
-endif
+    set hidden
+    set undofile
+    set backup
+    set swapfile
 
-" Répertoire pour les sauvegardes
-if &backup
-    let g:back_dir = $HOME . '/.vim/backups'
-    call mkdir(g:back_dir, 'p')
-    execute 'set backupdir^=' . g:back_dir
-endif
+    if has('nvim')
+        let s:swap_dir = $HOME . '/tmp/nvim/swaps'
+        let s:backups_dir = $HOME . '/tmp/nvim/backups'
+        let s:undo_dir = $HOME . '/tmp/nvim/undos'
+    else
+        let s:swap_dir = $HOME . '/tmp/vim/swaps'
+        let s:backups_dir = $HOME . '/tmp/vim/backups'
+        let s:undo_dir = $HOME . '/tmp/vim/undos'
+    endi
 
-" Répertoire pour les fichiers d'undo
-if &undofile
-    let g:undo_dir = $HOME . '/.vim/undos'
-    call mkdir(g:undo_dir, 'p')
-    execute 'set undodir^=' . g:undo_dir
+    if !isdirectory(s:swap_dir)
+        call mkdir(s:swap_dir, 'p')
+    endif
+
+    if !isdirectory(s:backups_dir)
+        call mkdir(s:backups_dir, 'p')
+    endif
+
+    if !isdirectory(s:undo_dir)
+        call mkdir(s:undo_dir, 'p')
+    endif
+
+    execute 'set directory^=' . s:swap_dir
+    execute 'set backupdir^=' . s:backups_dir
+    execute 'set undodir^=' . s:undo_dir
+
 endif
 
 " }}}
