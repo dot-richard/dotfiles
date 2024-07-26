@@ -39,7 +39,9 @@ alias nano='e'          # Je n'aime pas nano
 alias vi='e'
 alias vimrc='e ~/.vimrc'
 if [ "$EDITOR" = "nvim" ]; then
+    # le temps de m'habituer
     alias vim='nvim'
+    alias realvim='/usr/bin/vim'
 fi
 
 # de quoi me faciliter la vie
@@ -49,5 +51,5 @@ alias todo='cat ~/.todo'
 alias dotfiles='cd ~/.dotfiles'
 alias ru='rackup config.ru'
 alias gemfile='e Gemfile'
-alias jks='bundle exec jekyll serve'
-
+alias jek='bundle exec jekyll'
+alias script='cd scripts'
