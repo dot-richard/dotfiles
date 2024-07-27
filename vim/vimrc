@@ -23,13 +23,6 @@ function! s:is_development()
   return get(g:, 'environment', '') == 'development'
 endfunction
 
-" {{{ include la configuration par default
-
-"unlet! skip_defaults_vim
-"source $VIMRUNTIME/defaults.vim
-
-" }}}
-
 " {{{ Plugins
 
 call plug#begin('~/.config/vim/plugged')
@@ -38,14 +31,15 @@ Plug 'itchyny/lightline.vim'        " Nouvelle barre de status
 Plug 'mhinz/vim-startify'           " Nouveau écran d'acceuil
 Plug 'ryanoasis/vim-devicons'       " Ajouter des icones
 Plug 'scrooloose/nerdtree'          " Voir arborescence projet
-"Plug 'brooth/far.vim'               " Recherche
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'            " fermeture des blocs
 Plug 'tpope/vim-surround'
-"Plug 'tpope/vim-rake'
+Plug 'tpope/vim-rake'
+Plug 'sheerun/vim-polyglot'
+Plug 'vim-crystal/vim-crystal'
+Plug 'ecomba/vim-ruby-refactoring'
+"Plug 'brooth/far.vim'               " Recherche
 "Plug 'honza/vim-snippets'
-"Plug 'sheerun/vim-polyglot'
-"Plug 'ecomba/vim-ruby-refactoring'
 "Plug 'jiangmiao/auto-pairs'
 call plug#end()
 
@@ -121,6 +115,13 @@ set expandtab
 set shiftwidth=4
 set softtabstop=4
 set smartindent
+
+augroup FileTypeIndent
+  autocmd!
+  " 2 spaces by tabs
+  autocmd FileType html, xml setlocal shiftwidth=2 tabstop=2
+  autocmd FileType ruby, crystal setlocal shiftwidth=2 tabstop=2
+augroup END
 
 " }}}
 
@@ -199,14 +200,6 @@ augroup remember_cursor_position
     \ |   execute "normal! g`\""
     \ | endif
 augroup END
-
-" }}}
-
-" {{{ html indentation
-
-autocmd FileType html setlocal shiftwidth=2
-autocmd FileType html setlocal tabstop=2
-autocmd FileType html setlocal softtabstop=2
 
 " }}}
 
