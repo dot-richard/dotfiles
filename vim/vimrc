@@ -119,8 +119,10 @@ set smartindent
 augroup FileTypeIndent
   autocmd!
   " 2 spaces by tabs
-  autocmd FileType html, xml setlocal shiftwidth=2 tabstop=2
-  autocmd FileType ruby, crystal setlocal shiftwidth=2 tabstop=2
+  autocmd FileType html setlocal shiftwidth=2 tabstop=2
+  autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
+  autocmd FileType crystal setlocal shiftwidth=2 tabstop=2
+  autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 augroup END
 
 " }}}
