@@ -17,3 +17,4 @@ umask 022
 
 export PATH="$PATH:$HOME/.rbenv/bin"
 eval "$(rbenv init - $SHELL)"
+. "$HOME/.cargo/env"
