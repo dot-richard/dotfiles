@@ -224,3 +224,9 @@ command! Ruby :Dispatch ruby %
 command! Irb :Dispatch irb %
 
 " }}}
+
+" {{{ Rust Playplen
+
+let g:rust_clip_command = 'xclip -selection clipboard'
+
+" }}}
