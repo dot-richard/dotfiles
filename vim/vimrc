@@ -1,232 +1,256 @@
-" ..................................................
-" ..................................................
+" ==================================================
+" ==================================================
 
-" ..  ##    ##  ##  ##      ##   ####      ####   ..
-" ..  ##    ##  ##  ###    ###  ######    ######  ..
-" ..  ##    ##      ####  ####  ##   ##  ##       ..
-" ..  ###  ###  ##  ## #### ##  ######   ##       ..
-" ..   ######   ##  ##  ##  ##  ##   ##   ######  ..
-" ..     ##     ##  ##      ##  ##   ##    ####   ..
+" ==  ##    ##  ##  ##      ##   ####      ####   ==
+" ==  ##    ##  ##  ###    ###  ######    ######  ==
+" ==  ##    ##      ####  ####  ##   ##  ##       ==
+" ==  ###  ###  ##  ## #### ##  ######   ##       ==
+" ==   ######   ##  ##  ##  ##  ##   ##   ######  ==
+" ==     ##     ##  ##      ##  ##   ##    ####   ==
 
-" ..................................................
-" ..................................................
+" ==================================================
+" ==================================================
 
-" Définir l'environnement, development par default
-
-if !empty($ENVIRONMENT)
-  let g:environment = $ENVIRONMENT
-else
-  let g:environment = "development"
+" disable vi compatibilities
+if &compatible
+  set nocompatible
 endif
 
-function! s:is_development()
-  return get(g:, 'environment', '') == 'development'
+" Functions {{{
+
+" use to create some directories
+function! s:create_dir_if_not_exist(dir)
+  if isdirectory(a:dir)
+    return
+  endif
+
+  call mkdir(a:dir, "p")
 endfunction
 
-" {{{ Plugins
+" }}}
+" Plugged {{{
 
-call plug#begin('~/.config/vim/plugged')
-"Plug 'dot-richard/minimaldark256'   " MY colorscheme
-Plug 'itchyny/lightline.vim'        " Nouvelle barre de status
+call plug#begin('~/.vim/plugged')
 Plug 'mhinz/vim-startify'           " Nouveau écran d'acceuil
-Plug 'ryanoasis/vim-devicons'       " Ajouter des icones
-Plug 'scrooloose/nerdtree'          " Voir arborescence projet
-Plug 'tpope/vim-dispatch'
+Plug 'itchyny/lightline.vim'        " Nouvelle barre de status
+Plug 'scrooloose/nerdtree'          " Voir arborescence
+Plug 'ryanoasis/vim-devicons'       " Icones supplémentaires
+Plug 'sheerun/vim-polyglot'         " language packs
 Plug 'tpope/vim-endwise'            " fermeture des blocs
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-rake'
-Plug 'sheerun/vim-polyglot'
-Plug 'vim-crystal/vim-crystal'
-Plug 'ecomba/vim-ruby-refactoring'
-Plug 'rust-lang/rust.vim'
-
-"Plug 'brooth/far.vim'               " Recherche
-"Plug 'honza/vim-snippets'
-"Plug 'jiangmiao/auto-pairs'
 call plug#end()
 
 " }}}
+" Settings {{{
 
-" {{{ Map Leader
+" - Buffers {{{
 
-let mapleader =  ','
+" allow buffers to have changes without being displayed
+set hidden
 
 " }}}
+" - Confirm {{{
 
-" {{{ colorscheme
+" prompt instead of just rejecting risky :write, :saveas
+set confirm
+
+" }}}
+" - Encoding {{{
+
+if has('multi_byte') && !exists('$LANG')
+  " use UTF-8 if possible
+  set encoding=utf-8
+  set fileencoding=utf-8
+endif
+
+" }}}
+" - Map {{{
+
+" <leader>
+let mapleader =  ','
+
+" a bit longer to complete mappings
+set timeoutlen=5000
+
+" }}}
+" - History {{{
+
+" more command and search history
+set history=2000
+
+" viminfo
+" '100  - conserver jusqu'à 100 commandes de la ligne de commande
+" <50   - conserver jusqu'à 50 lignes de chaque fichier ouvert
+" s100  - conserver jusqu'à 100 marque-pages
+" h     - conserver l'historique des recherches
+set viminfo='100,<50,s100,h
+set viminfofile=~/.viminfo
+" TODO
+"set shada='100,<50,s100,h
+
+" }}}
+" - Cache {{{
+
+" cache directory can contain
+" - swap files
+" - baskup files
+" - undo files
+
+let g:cachedir = '.cache'
+
+" cache options
+set swapfile
+set backup
+if has('persistent_undo')
+  set undofile
+endif
+
+" to prevent conflicts between vim cache and nvim cache
+if has('nvim')
+  let g:cachedir = g:cachedir . "/nvim"
+else
+  let g:cachedir = g:cachedir . "/vim"
+endi
+
+" create cache dir
+call s:create_dir_if_not_exist(g:cachedir)
+
+" create and set the swap dir
+if &swapfile
+  let s:my_swapdir = g:cachedir . "/swaps"
+  call s:create_dir_if_not_exist(s:my_swapdir)
+  execute "set directory=" . s:my_swapdir
+endif
+
+" create and set the backup dir
+if &backup
+  let s:my_backdir = g:cachedir . "/backups"
+  call s:create_dir_if_not_exist(s:my_backdir)
+  execute "set backupdir=" . s:my_backdir
+endif
+
+" create and set the undo dir
+if &undofile
+  let s:my_undodir = g:cachedir . "/undos"
+  call s:create_dir_if_not_exist(s:my_undodir)
+  execute "set undodir=" . s:my_undodir
+endif
+
+" }}}
+" - Syntax {{{
+
+if has('syntax')
+  " enable highlight based on syntax
+  syntax on
+endif
+
+" completion based on syntax
+set omnifunc=syntaxcomplete#Complete
+
+" }}}
+" - Colorscheme {{{
 
 colorscheme minimaldark256
 
-"}}}
+" }}}
+" - Textarea {{{
 
-" {{{ Interface
-
-set encoding=utf-8
-set fileencoding=utf-8
-set ruler
-set number
-set relativenumber
-set cc=100
-set cursorline
-set cursorcolumn
-set signcolumn=auto
-set foldmethod=marker
-set foldcolumn=1
-set noshowmatch
-let g:loaded_matchparen = 1     " desactiver les parenthèses
-set ttyfast
-set clipboard=unnamedplus
-" set mouse=a
-set list
+set ttyfast                 " faster scroll
+set laststatus=2            " show status bar
+set ruler                   " show cursor position on status bar
+set showcmd                 " show command on status bar
+set showmode                " show mode on status bar
+set shortmess+=I            " don't show startup splash screen (I donated)
+set number                  " show line numbers
+set relativenumber          " show relative number from cursor
+set cc=100                  " show column limit to break
+set cursorline              " show cursor line
+set cursorcolumn            " show cursor column
+set signcolumn=auto         " show column sign
+set linebreak               " break the line at word boundaries
+set showbreak=...           " linebreak prefix
+set list                    " show hidden chars
 set listchars=tab:>-,trail:~,extends:>,precedes:<,nbsp:_
 set fillchars=eob:~,fold:-,foldopen:+,foldclose:-
-set showmatch
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
 
 " }}}
+" - Cursor {{{
 
-" {{{ status bar
+"  1 -> blinking block
+"  2 -> solid block
+"  3 -> blinking underscore
+"  4 -> solid underscore
+"  5 -> blinking vertical bar
+"  6 -> solid vertical bar
 
-set laststatus=2
-set showcmd
-set showmode
-
-" lightline
-let g:lightline = {
-\   'active': {
-\       'left': [
-\           [ 'mode', 'paste' ],
-\           [ 'readonly', 'filename', 'modified' ]
-\       ]
-\   },
-\
-\   'component_function': {
-\       'filename': 'LightlineFilename',
-\       'gitbranch': 'FugitiveHead'
-\   }
-\ }
-" }}}
-
-" {{{ indentation
-
-set autoindent
-set expandtab
-set shiftwidth=4
-set softtabstop=4
-set smartindent
-
-augroup FileTypeIndent
-  autocmd!
-  " 2 spaces by tabs
-  autocmd FileType html setlocal shiftwidth=2 tabstop=2
-  autocmd FileType css setlocal shiftwidth=2 tabstop=2
-  autocmd FileType scss setlocal shiftwidth=2 tabstop=2
-  autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
-  autocmd FileType crystal setlocal shiftwidth=2 tabstop=2
-  autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
-augroup END
+let &t_SI.="\e[5 q" "SI = INSERT mode
+let &t_SR.="\e[4 q" "SR = REPLACE mode
+let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
 
 " }}}
+" - Matching {{{
 
-" {{{ completions
-
-filetype plugin indent on
-set omnifunc=syntaxcomplete#Complete
-set wildmenu
-set wildmode=list:full,full
-set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xls
+set regexpengine=1
+set hlsearch                " highlight completed search
+set incsearch               " show search matches as I type my pattern
+set ignorecase              " ignore case during search
+set smartcase               " override the ignore case when capital letters
+"set showmatch               " briefly jump to the matching one bracket
+set noshowmatch             " disabled match parenthese
+let g:loaded_matchparen = 1 " stop matchparen plugin
 
 " }}}
+" - Wildmenu {{{
 
-" {{{ fichiers temporaires
+if has('wildmenu')
+  set wildmenu
+  set wildmode=list:full,full
+  set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xls
+endif
 
-if s:is_development()
+" }}}
+" - Indentation {{{
 
-    set hidden
-    set undofile
-    set backup
-    set swapfile
+" Attempt to determine the type of a file based on its name and possibly its
+" contents. Use this to allow intelligent auto-indenting for each filetype,
+" and for plugins that are filetype specific.
+if has('filetype')
+ filetype indent plugin on
+endif
 
-    if has('nvim')
-        let s:swap_dir = $HOME . '/tmp/nvim/swaps'
-        let s:backups_dir = $HOME . '/tmp/nvim/backups'
-        let s:undo_dir = $HOME . '/tmp/nvim/undos'
-    else
-        let s:swap_dir = $HOME . '/tmp/vim/swaps'
-        let s:backups_dir = $HOME . '/tmp/vim/backups'
-        let s:undo_dir = $HOME . '/tmp/vim/undos'
-    endi
+" automatically adjust indentation based on the syntax and context of the code
+if has('smartindent')
+  set smartindent
+endif
 
-    if !isdirectory(s:swap_dir)
-        call mkdir(s:swap_dir, 'p')
-    endif
+if has('cindent')
+  set cindent
+endif
 
-    if !isdirectory(s:backups_dir)
-        call mkdir(s:backups_dir, 'p')
-    endif
+" the all important default indent settings;
+" filtetypes to tweak
+set autoindent                " indent of previous line on new lines
+set expandtab                 " use spaces instead of tabs
+set shiftwidth=4              " indent size
+set softtabstop=4             " tab key size
 
-    if !isdirectory(s:undo_dir)
-        call mkdir(s:undo_dir, 'p')
-    endif
+" }}}
+" - Other features {{{
 
-    execute 'set directory^=' . s:swap_dir
-    execute 'set backupdir^=' . s:backups_dir
-    execute 'set undodir^=' . s:undo_dir
+if has('clipboard')
+  " use system clipboard
+  set clipboard=unnamedplus
+endif
 
+if has('mouse')
+  " mouse for all modes
+  set mouse=a
 endif
 
 " }}}
 
-" {{{ arreter la surbrillance en mode recherche
-
-nnoremap <silent> <leader>n :nohlsearch<CR>
-
 " }}}
 
-" {{{ Remove trails space
+runtime! custom/maps.vim
+runtime! custom/cmds.vim
+runtime! custom/autocmds.vim
 
-" Auto efface les queues d'espaces avant sauvegarde :
-"autocmd BufWritePre * %s/\s\+$//e " probleme avec les diacritiques
-autocmd BufWritePre * %s/ \+$//e
-
-" }}}
-
-" {{{ se souvenir de la dernière position du curseur
-
-" from default.vim
-augroup remember_cursor_position
-    autocmd!
-    autocmd BufReadPost *
-    \ let line = line("'\"")
-    \ | if line >= 1 && line <= line("$") && &filetype !~# 'commit'
-    \      && index(['xxd', 'gitrebase'], &filetype) == -1
-    \ |   execute "normal! g`\""
-    \ | endif
-augroup END
-
-" }}}
-
-" {{{ NERDTree
-
-map <C-n> :NERDTreeToggle<CR>
-command NT NERDTree
-let g:NERDTreeShowHidden=1
-let NERDTreeIgnore=['\~$']
-
-" }}}
-
-" {{{ dispatch
-
-command! Ruby :Dispatch ruby %
-command! Irb :Dispatch irb %
-
-" }}}
-
-" {{{ Rust Playplen
-
-let g:rust_clip_command = 'xclip -selection clipboard'
-
-" }}}
