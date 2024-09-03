@@ -1,9 +1,16 @@
-" Assurer que les attributs GUI ne sont pas utilisés
-set notermguicolors
-" Spécifier le nombre de couleurs pour le terminal
-set t_Co=256
-" Inclure le répertoire des plugins de Vim
-set runtimepath+=~/.vim
-" Charger le vimrc de Vim
-source $HOME/.vimrc
+" nvim/init.vim
+
+" For use vim shared configuration
+
+" Add ~./vim and ~/.vim/after to the list of directories
+" to search for runtime files like filetype.vim, scripts.vim, etc:
+set runtimepath=$VIMRUNTIME,~/.vim
+"set runtimepath+=~/.vim/after
+
+" Add the full runtime path to the list of directories
+" to use to find Vim packages
+let &packpath = &runtimepath
+
+" Run vimrc
+runtime! vimrc
 
