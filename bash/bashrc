@@ -24,3 +24,5 @@ if [ -d "$BASH_CONFIG_DIR" ]; then
     unset file
 fi
 
+eval $(keychain --eval id_rsa)
+
