@@ -3,16 +3,6 @@
 # Si le shell n'est pas exécuté de manière interactive, ne fais rien.
 [[ $- != *i* ]] && return
 
-# Inclure Bash completion
-if [ -f /etc/bash_completion ]; then
-    source /etc/bash_completion
-fi
-
-# Inclure les alias génénaux
-if [ -f ~/.aliases ]; then
-    source ~/.aliases
-fi
-
 # Le répertoire pour bash interractif.
 BASH_CONFIG_DIR=~/.bashrc.d
 
@@ -22,6 +12,16 @@ if [ -d "$BASH_CONFIG_DIR" ]; then
         [ -f "$file" ] && [ -r "$file" ] && source "$file"
     done
     unset file
+fi
+
+# Inclure Bash completion
+if [ -f /etc/bash_completion ]; then
+    source /etc/bash_completion
+fi
+
+# Inclure les alias génénaux
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
 fi
 
 eval $(keychain --eval id_rsa)

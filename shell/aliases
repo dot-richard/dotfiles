@@ -6,6 +6,12 @@ alias rm='rm -i'
 alias ln='ln -i'
 alias mv='mv -i'
 
+# couleurs
+if [[ -n "$LS_COLORS" ]]; then
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+fi
+
 # ls
 alias l='ls -v'         # Triés
 alias lx='ls -lXB'      # Triés par extension.
@@ -37,7 +43,7 @@ alias ed='e'
 alias edit='e'
 alias nano='e'          # Je n'aime pas nano
 alias vi='e'
-alias vimrc='e ~/.vimrc'
+alias vimrc='e ~/.vim/vimrc'
 if [ "$EDITOR" = "nvim" ]; then
     # le temps de m'habituer
     alias vim='nvim'
